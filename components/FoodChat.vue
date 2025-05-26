@@ -3,8 +3,8 @@
         <div v-if="isLoading" class="absolute inset-0 flex items-center justify-center bg-base-100/80 rounded-lg z-10">
             <span class="loading loading-spinner loading-md text-primary"></span>
         </div>
-        <div class="messages flex-1 overflow-y-auto space-y-4" role="log" aria-live="polite">
-            <Message v-for="msg in messages" :key="msg.id" :sender="msg.sender" :text="msg.text" :images="msg.images" />
+        <div class="messages chat-start flex-1 overflow-y-auto space-y-4" role="log" aria-live="polite">
+            <Message class="chat-bubble" v-for="msg in messages" :key="msg.id" :sender="msg.sender" :text="msg.text" :images="msg.images" />
             <div ref="messagesEndRef"></div>
         </div>
         <InputArea class="mt-4" @submit="handleSubmit" :isLoading="isLoading" />
