@@ -2,10 +2,12 @@
     <div class="min-h-screen bg-base-100 flex flex-col font-sans">
         <Header />
         <main class="flex-1 container mx-auto px-4 py-8">
-            <div class="max-w-4xl mx-auto space-y-12">
-                <HeroSection @submit-food="handleFoodSubmit" ref="heroRef" :isLoading="isLoading" />
-                <FeaturesSection />
-                <FAQSection />
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-4xl font-bold text-center mb-6">Krave AI</h1>
+                <p class="text-lg text-center text-base-content/70 mb-12">
+                    Curious about a dish or ingredient? Let's explore it together.
+                </p>
+                <FoodChat @submit-food="handleFoodSubmit" ref="heroRef" :isLoading="isLoading" />
             </div>
         </main>
         <Footer />

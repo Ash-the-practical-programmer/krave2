@@ -3,18 +3,18 @@
         <div v-if="selectedImages.length" class="flex gap-2 mb-4 overflow-x-auto pb-2">
             <div v-for="image in selectedImages" :key="image.name" class="relative flex-shrink-0">
                 <img :src="getPreviewUrl(image)" :alt="`Preview: ${image.name}`"
-                    class="w-16 h-16 object-cover rounded-md" />
+                    class="w-16 h-16 object-cover rounded-lg" />
                 <button @click="removeImage(image)"
-                    class="absolute -top-1 -right-1 bg-base-100 rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-sm hover:bg-base-200"
+                    class="absolute -top-1 -right-1 bg-base-100 rounded-full w-5 h-5 flex items-center justify-center text-xs"
                     aria-label="Remove image">×</button>
             </div>
         </div>
         <div v-if="errorMessage" class="text-xs text-error mb-2">{{ errorMessage }}</div>
         <div class="flex gap-2">
-            <input type="text" v-model="message" placeholder="Type a message..."
-                class="input input-bordered flex-1 h-10 min-h-[40px] text-sm bg-base-100"
+            <input type="text" v-model="message" placeholder="Ask about any food..."
+                class="flex-1 h-10 px-4 rounded-full bg-base-200 border-none focus:ring-1 focus:ring-primary text-sm"
                 @keyup.enter="sendMessage" />
-            <label for="image-upload" class="btn btn-square btn-sm">
+            <label for="image-upload" class="btn btn-circle btn-ghost btn-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -24,11 +24,11 @@
             <input type="file" id="image-upload" multiple accept="image/png,image/jpeg,image/webp"
                 @change="handleImageUpload" class="hidden" />
             <button @click="sendMessage" :disabled="isLoading || (!message.trim() && !selectedImages.length)"
-                class="btn btn-primary btn-square btn-sm">
+                class="btn btn-circle btn-primary btn-sm">
                 <span v-if="isLoading" class="loading loading-spinner loading-sm"></span>
                 <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
             </button>
         </div>
