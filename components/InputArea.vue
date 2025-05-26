@@ -1,26 +1,25 @@
 <template>
-    <div class="input-area fixed bottom-0 left-0 right-0 shadow-glass z-50 max-w-4xl mx-auto p-2 sm:p-6 font-sans transition-all duration-300"
-        :class="{ 'hidden': !showInput }">
+    <div class="input-area bg-base-100/95 backdrop-blur-sm rounded-xl border border-base-200/50 p-3 shadow-lg font-sans transition-all duration-300">
         <div v-if="selectedImages.length" class="image-previews flex flex-wrap gap-2 sm:gap-3 mb-4">
-            <div v-for="image in selectedImages" :key="image.name" class="relative">
+            <div v-for="image in selectedImages" :key="image.name" class="relative group">
                 <img :src="getPreviewUrl(image)" :alt="`Preview: ${image.name}`" loading="lazy"
-                    class="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg shadow-softer" />
+                    class="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg shadow-md transition-all duration-200 group-hover:brightness-75" />
                 <button @click="removeImage(image)"
-                    class="absolute -top-1 -right-1 bg-error/90 text-base-content rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-error hover:scale-110 transition-all duration-200 animate-pulse"
+                    class="absolute top-1 right-1 bg-error/90 text-base-100 rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 hover:bg-error hover:scale-110 transition-all duration-200"
                     aria-label="Remove image">
-                    X
+                    ×
                 </button>
             </div>
         </div>
-        <div v-if="errorMessage" class="text-xs text-error/80 mb-3 text-center" role="alert">
+        <div v-if="errorMessage" class="text-xs text-error mb-3 text-center animate-shake" role="alert">
             {{ errorMessage }}
         </div>
         <div class="flex items-center gap-2 sm:gap-3">
-            <input type="text" v-model="message" placeholder="Describe the food..."
-                class="input input-bordered flex-1 text-sm sm:text-base bg-base-100 border-base-200 transition-all duration-200 rounded-lg shadow-softer"
+            <input type="text" v-model="message" placeholder="Describe the food or ask a question..."
+                class="input input-bordered flex-1 text-sm sm:text-base bg-base-100 border-primary/20 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 rounded-xl"
                 aria-label="Food description input" @keyup.enter="sendMessage" />
             <label for="image-upload"
-                class="btn p-2 btn-outline btn-primary flex items-center gap-2 hover:bg-secondary/20 hover:shadow-soft focus:ring-2 focus:ring-secondary focus:ring-offset-2 transition-all duration-200 animate-pulse"
+                class="btn btn-circle btn-outline btn-primary hover:bg-primary/10 transition-all duration-200"
                 aria-label="Upload images">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
@@ -31,8 +30,8 @@
             <input type="file" id="image-upload" multiple accept="image/png,image/jpeg,image/webp"
                 @change="handleImageUpload" class="hidden" />
             <button @click="sendMessage" :disabled="isLoading || (!message.trim() && !selectedImages.length)"
-                class="btn p-2 btn-primary flex items-center gap-2 hover:bg-primary-dark hover:shadow-soft focus:ring-2 focus:ring-secondary focus:ring-offset-2 transition-all duration-200 animate-pulse"
-                :class="{ 'btn-disabled': isLoading || (!message.trim() && !selectedImages.length) }"
+                class="btn btn-circle btn-primary hover:brightness-110 transition-all duration-200"
+                :class="{ 'opacity-50 cursor-not-allowed': isLoading || (!message.trim() && !selectedImages.length) }"
                 aria-label="Send message">
                 <span v-if="isLoading" class="loading loading-spinner loading-sm"></span>
                 <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -110,11 +109,14 @@ const sendMessage = () => {
 </script>
 
 <style scoped>
-.input-area {
-    transition: transform 0.3s ease;
+.animate-shake {
+    animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
-.hidden {
-    transform: translateY(100%);
+@keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
 }
 </style>
