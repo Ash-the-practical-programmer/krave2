@@ -1,8 +1,14 @@
 <template>
-    <div class="min-h-screen bg-base-100 flex flex-col font-sans transition-colors duration-300">
+    <div class="min-h-screen bg-base-100 flex flex-col font-sans">
         <Header />
-        <HeroSection @submit-food="handleFoodSubmit" ref="heroRef" :isLoading="isLoading" />
-        <!--<Footer />-->
+        <main class="flex-1 container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto space-y-12">
+                <HeroSection @submit-food="handleFoodSubmit" ref="heroRef" :isLoading="isLoading" />
+                <FeaturesSection />
+                <FAQSection />
+            </div>
+        </main>
+        <Footer />
     </div>
 </template>
 
@@ -14,7 +20,7 @@ const handleFoodSubmit = async ({ description, images }) => {
     isLoading.value = true
     try {
         const formData = new FormData();
-        formData.append('description', description || '') // Ensure description is at least an empty string
+        formData.append('description', description || '')
 
         if (images && images.length > 0) {
             for (let i = 0; i < images.length; i++) {
@@ -22,12 +28,9 @@ const handleFoodSubmit = async ({ description, images }) => {
             }
         }
 
-        // When using FormData with fetch, the browser automatically sets
-        // the 'Content-Type' header to 'multipart/form-data'.
-        // Do not set it manually.
         const response = await fetch('http://localhost:3000/api/analyze-food', {
             method: 'POST',
-            body: formData, // Send formData directly
+            body: formData,
         })
 
         if (response.ok) {
@@ -44,10 +47,11 @@ const handleFoodSubmit = async ({ description, images }) => {
         isLoading.value = false
     }
 }
-</script>
 
-<style scoped>
-html {
-    scroll-behavior: smooth;
-}
-</style>
+useHead({
+    title: 'Krave AI - Your Food Analysis Assistant',
+    meta: [
+        { name: 'description', content: 'Get instant insights about any food with Krave AI. Upload photos or describe foods to learn more about them.' }
+    ]
+})
+</script>
