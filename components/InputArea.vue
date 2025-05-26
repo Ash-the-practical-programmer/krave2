@@ -1,26 +1,20 @@
 <template>
-    <div class="input-area bg-base-100/95 backdrop-blur-sm rounded-xl border border-base-200/50 p-3 shadow-lg font-sans transition-all duration-300">
-        <div v-if="selectedImages.length" class="image-previews flex flex-wrap gap-2 sm:gap-3 mb-4">
-            <div v-for="image in selectedImages" :key="image.name" class="relative group">
-                <img :src="getPreviewUrl(image)" :alt="`Preview: ${image.name}`" loading="lazy"
-                    class="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg shadow-md transition-all duration-200 group-hover:brightness-75" />
+    <div class="border-t border-base-200 pt-4">
+        <div v-if="selectedImages.length" class="flex gap-2 mb-4 overflow-x-auto pb-2">
+            <div v-for="image in selectedImages" :key="image.name" class="relative flex-shrink-0">
+                <img :src="getPreviewUrl(image)" :alt="`Preview: ${image.name}`"
+                    class="w-16 h-16 object-cover rounded-md" />
                 <button @click="removeImage(image)"
-                    class="absolute top-1 right-1 bg-error/90 text-base-100 rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 hover:bg-error hover:scale-110 transition-all duration-200"
-                    aria-label="Remove image">
-                    ×
-                </button>
+                    class="absolute -top-1 -right-1 bg-base-100 rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-sm hover:bg-base-200"
+                    aria-label="Remove image">×</button>
             </div>
         </div>
-        <div v-if="errorMessage" class="text-xs text-error mb-3 text-center animate-shake" role="alert">
-            {{ errorMessage }}
-        </div>
-        <div class="flex items-center gap-2 sm:gap-3">
-            <input type="text" v-model="message" placeholder="Describe the food or ask a question..."
-                class="input input-bordered flex-1 text-sm sm:text-base bg-base-100 border-primary/20 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 rounded-xl"
-                aria-label="Food description input" @keyup.enter="sendMessage" />
-            <label for="image-upload"
-                class="btn btn-circle btn-outline btn-primary hover:bg-primary/10 transition-all duration-200"
-                aria-label="Upload images">
+        <div v-if="errorMessage" class="text-xs text-error mb-2">{{ errorMessage }}</div>
+        <div class="flex gap-2">
+            <input type="text" v-model="message" placeholder="Type a message..."
+                class="input input-bordered flex-1 h-10 min-h-[40px] text-sm bg-base-100"
+                @keyup.enter="sendMessage" />
+            <label for="image-upload" class="btn btn-square btn-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -30,9 +24,7 @@
             <input type="file" id="image-upload" multiple accept="image/png,image/jpeg,image/webp"
                 @change="handleImageUpload" class="hidden" />
             <button @click="sendMessage" :disabled="isLoading || (!message.trim() && !selectedImages.length)"
-                class="btn btn-circle btn-primary hover:brightness-110 transition-all duration-200"
-                :class="{ 'opacity-50 cursor-not-allowed': isLoading || (!message.trim() && !selectedImages.length) }"
-                aria-label="Send message">
+                class="btn btn-primary btn-square btn-sm">
                 <span v-if="isLoading" class="loading loading-spinner loading-sm"></span>
                 <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
@@ -107,16 +99,3 @@ const sendMessage = () => {
     }
 };
 </script>
-
-<style scoped>
-.animate-shake {
-    animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-}
-
-@keyframes shake {
-    10%, 90% { transform: translate3d(-1px, 0, 0); }
-    20%, 80% { transform: translate3d(2px, 0, 0); }
-    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-    40%, 60% { transform: translate3d(4px, 0, 0); }
-}
-</style>
