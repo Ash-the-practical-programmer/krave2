@@ -1,5 +1,6 @@
 <template>
-    <div class="input-area mt-4 font-sans pr-auto">
+    <div class="input-area fixed bottom-0 left-0 right-0 shadow-glass z-50 max-w-4xl mx-auto p-2 sm:p-6 font-sans transition-all duration-300"
+        :class="{ 'hidden': !showInput }">
         <div v-if="selectedImages.length" class="image-previews flex flex-wrap gap-2 sm:gap-3 mb-4">
             <div v-for="image in selectedImages" :key="image.name" class="relative">
                 <img :src="getPreviewUrl(image)" :alt="`Preview: ${image.name}`" loading="lazy"
@@ -26,7 +27,6 @@
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                <!--span class="hidden sm:inline">Upload</span-->
             </label>
             <input type="file" id="image-upload" multiple accept="image/png,image/jpeg,image/webp"
                 @change="handleImageUpload" class="hidden" />
@@ -39,69 +39,82 @@
                     stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
-                <!--span class="hidden sm:inline">Send</span-->
             </button>
         </div>
     </div>
 </template>
 
 <script setup>
-const emit = defineEmits(['submit'])
+const emit = defineEmits(['submit']);
 defineProps({
     isLoading: Boolean,
-})
+    showInput: {
+        type: Boolean,
+        default: true,
+    },
+});
 
-const message = ref('')
-const selectedImages = ref([])
-const previewUrls = ref({})
-const errorMessage = ref('')
+const message = ref('');
+const selectedImages = ref([]);
+const previewUrls = ref({});
+const errorMessage = ref('');
 
 const handleImageUpload = (event) => {
-    errorMessage.value = ''
-    const files = Array.from(event.target.files)
-    const maxSize = 5 * 1024 * 1024
+    errorMessage.value = '';
+    const files = Array.from(event.target.files);
+    const maxSize = 5 * 1024 * 1024;
     const validFiles = files.filter((file) => {
         if (file.size > maxSize) {
-            errorMessage.value = `File "${file.name}" is too large! Please upload images under 5MB.`
-            return false
+            errorMessage.value = `File "${file.name}" is too large! Please upload images under 5MB.`;
+            return false;
         }
-        return true
-    })
+        return true;
+    });
 
     if (validFiles.length < files.length && !errorMessage.value) {
-        errorMessage.value = 'Some files were too large and were not added.'
+        errorMessage.value = 'Some files were too large and were not added.';
     }
 
-    selectedImages.value.push(...validFiles)
+    selectedImages.value.push(...validFiles);
     validFiles.forEach((file) => {
-        const reader = new FileReader()
+        const reader = new FileReader();
         reader.onload = (e) => {
-            previewUrls.value[file.name] = e.target.result
-        }
-        reader.readAsDataURL(file)
-    })
-}
+            previewUrls.value[file.name] = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+};
 
-const getPreviewUrl = (file) => previewUrls.value[file.name]
+const getPreviewUrl = (file) => previewUrls.value[file.name];
 
 const removeImage = (file) => {
-    selectedImages.value = selectedImages.value.filter((img) => img !== file)
-    delete previewUrls.value[file.name]
+    selectedImages.value = selectedImages.value.filter((img) => img !== file);
+    delete previewUrls.value[file.name];
     if (!selectedImages.value.length) {
-        errorMessage.value = ''
+        errorMessage.value = '';
     }
-}
+};
 
 const sendMessage = () => {
     if (message.value.trim() || selectedImages.value.length) {
         emit('submit', {
             description: message.value,
             images: selectedImages.value,
-        })
-        message.value = ''
-        selectedImages.value = []
-        previewUrls.value = {}
-        errorMessage.value = ''
+        });
+        message.value = '';
+        selectedImages.value = [];
+        previewUrls.value = {};
+        errorMessage.value = '';
     }
-}
+};
 </script>
+
+<style scoped>
+.input-area {
+    transition: transform 0.3s ease;
+}
+
+.hidden {
+    transform: translateY(100%);
+}
+</style>
